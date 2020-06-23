@@ -3,7 +3,7 @@ module ForemanPuppetEnc
     module V2
       class SmartClassParametersController < ::Api::V2::BaseController
         include ::Api::Version2
-        include ::Api::V2::LookupKeysCommonController
+        include Api::V2::LookupKeysCommonController
         include Parameters::PuppetclassLookupKey
 
         resource_description do
