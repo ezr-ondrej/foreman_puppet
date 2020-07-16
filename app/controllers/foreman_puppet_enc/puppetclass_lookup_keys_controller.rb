@@ -1,6 +1,6 @@
 module ForemanPuppetEnc
   class PuppetclassLookupKeysController < LookupKeysController
-    include Parameters::PuppetclassLookupKey
+    include ForemanPuppetEnc::Parameters::PuppetclassLookupKey
 
     before_action :setup_search_options, :only => :index
 

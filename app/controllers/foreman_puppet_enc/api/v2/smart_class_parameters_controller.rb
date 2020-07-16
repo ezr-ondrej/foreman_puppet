@@ -4,7 +4,7 @@ module ForemanPuppetEnc
       class SmartClassParametersController < ::Api::V2::BaseController
         include ::Api::Version2
         include Api::V2::LookupKeysCommonController
-        include Parameters::PuppetclassLookupKey
+        include ForemanPuppetEnc::Parameters::PuppetclassLookupKey
 
         resource_description do
           api_base_url '/foreman_puppet/api'
