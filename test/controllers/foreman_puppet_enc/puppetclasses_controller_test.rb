@@ -81,19 +81,17 @@ module ForemanPuppetEnc
     # puppetclass(:two) has an overridable lookup key custom_class_param.
     # custom_class_param is a smart_class_param for production environment only AND is marked as :override => TRUE
     test 'puppetclass lookup keys are added to partial _class_parameters on EXISTING host form through ajax POST to parameters' do
-      skip 'We need correct the overridable_lookup_keys' unless ForemanPuppetEnc.extracted_from_core?
       host = FactoryBot.create(:host, environment: environment)
       existing_host_attributes = host_attributes(host)
       post :parameters, params: { id: puppetclass.id, host_id: host.id,
                                   host: existing_host_attributes }, session: set_session_user
       assert_response :success
-      lookup_keys_added = overridable_lookup_keys(puppetclass, host)
+      lookup_keys_added = overridable_puppet_lookup_keys(puppetclass, host)
       assert_equal 1, lookup_keys_added.count
       assert_includes lookup_keys_added.map(&:key), puppetclass.class_params.first.key
     end
 
     test 'puppetclass smart class parameters are NOT added if environment does not match' do
-      skip 'We need correct the overridable_lookup_keys' unless ForemanPuppetEnc.extracted_from_core?
       # below is the same test as above, except environment is changed from production to global_puppetmaster, so custom_class_param is NOT added
       host = FactoryBot.create(:host, environment: environment)
       existing_host_attributes = host_attributes(host)
@@ -102,14 +100,13 @@ module ForemanPuppetEnc
                                   host: existing_host_attributes }, session: set_session_user
       assert_response :success
       as_admin do
-        lookup_keys_added = overridable_lookup_keys(puppetclass, host)
+        lookup_keys_added = overridable_puppet_lookup_keys(puppetclass, host)
         assert_equal 0, lookup_keys_added.count
         assert_not lookup_keys_added.map(&:key).include?(puppetclass.class_params.first.key)
       end
     end
 
     test 'puppetclass lookup keys are added to partial _class_parameters on EXISTING hostgroup form through ajax POST to parameters' do
-      skip 'We need correct the overridable_lookup_keys' unless ForemanPuppetEnc.extracted_from_core?
       hostgroup = FactoryBot.create(:hostgroup, environment: environment)
       existing_hostgroup_attributes = hostgroup_attributes(hostgroup)
       # host_id is posted instead of hostgroup_id per host_edit.js#load_puppet_class_parameters
@@ -117,28 +114,26 @@ module ForemanPuppetEnc
                                   hostgroup: existing_hostgroup_attributes }, session: set_session_user
       assert_response :success
       as_admin do
-        lookup_keys_added = overridable_lookup_keys(puppetclass, hostgroup)
+        lookup_keys_added = overridable_puppet_lookup_keys(puppetclass, hostgroup)
         assert_equal 1, lookup_keys_added.count
         assert_includes lookup_keys_added.map(&:key), puppetclass.class_params.first.key
       end
     end
 
     test 'puppetclass lookup keys are added to partial _class_parameters on NEW host form through ajax POST to parameters' do
-      skip 'We need correct the overridable_lookup_keys' unless ForemanPuppetEnc.extracted_from_core?
       host = Host::Managed.new(name: 'new_host', environment_id: environment.id)
       new_host_attributes = host_attributes(host)
       post :parameters, params: { id: puppetclass.id, host_id: 'undefined',
                                   host: new_host_attributes }, session: set_session_user
       assert_response :success
       as_admin do
-        lookup_keys_added = overridable_lookup_keys(puppetclass, host)
+        lookup_keys_added = overridable_puppet_lookup_keys(puppetclass, host)
         assert_equal 1, lookup_keys_added.count
         assert_includes lookup_keys_added.map(&:key), puppetclass.class_params.first.key
       end
     end
 
     test 'puppetclass lookup keys are added to partial _class_parameters on NEW hostgroup form through ajax POST to parameters' do
-      skip 'We need correct the overridable_lookup_keys' unless ForemanPuppetEnc.extracted_from_core?
       hostgroup = Hostgroup.new(name: 'new_hostgroup', environment_id: environments(:production).id)
       new_hostgroup_attributes = hostgroup_attributes(hostgroup)
       puppetclass = puppetclasses(:two)
@@ -147,7 +142,7 @@ module ForemanPuppetEnc
                                   hostgroup: new_hostgroup_attributes }, session: set_session_user
       assert_response :success
       as_admin do
-        lookup_keys_added = overridable_lookup_keys(puppetclass, hostgroup)
+        lookup_keys_added = overridable_puppet_lookup_keys(puppetclass, hostgroup)
         assert_equal 1, lookup_keys_added.count
         assert_includes lookup_keys_added.map(&:key), puppetclass.class_params.first.key
       end
