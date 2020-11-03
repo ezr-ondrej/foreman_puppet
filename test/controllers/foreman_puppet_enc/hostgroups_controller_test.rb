@@ -42,7 +42,6 @@ module ForemanPuppetEnc
       end
 
       test 'should not escape lookup values on environment change' do
-        skip 'Needs fully extracted puppet' unless ForemanPuppetEnc.extracted_from_core?
         hostgroup = FactoryBot.create(:hostgroup, environment: @environment, puppetclass_ids: [@puppetclass.id])
         lookup_key = FactoryBot.create(:puppetclass_lookup_key, :array, default_value: %w[a b],
                                                                         override: true,

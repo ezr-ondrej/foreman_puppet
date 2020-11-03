@@ -276,7 +276,6 @@ module ForemanPuppetEnc
         end
 
         test 'selecting domain updates puppetclass parameters' do
-          skip 'Needs PuppetInfo extracted properly' unless ForemanPuppetEnc.extracted_from_core?
           disable_orchestration
           domain = FactoryBot.create(:domain)
           FactoryBot.create(:puppetclass_lookup_key, path: "fqdn\ndomain\ncomment",
